@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Request
-from typing import Dict, Any
+from fastapi import FastAPI, status
+from pydantic import BaseModel
+
+class Post(BaseModel):
+	title: str
 
 app = FastAPI()
 
-@app.get("/")
-async def get_request_object(request: Request) -> Dict[str, Any]:
-	return {"path": request.url.path}
+@app.post("/posts", status_code=status.HTTP_201_CREATED)
+async def create_post(post: Post) -> Post:
+	return post
