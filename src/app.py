@@ -1,11 +1,19 @@
 from fastapi import FastAPI, status
+from typing import Dict, Any
 from pydantic import BaseModel
 
 class Post(BaseModel):
 	title: str
+	nb_views: int
 
 app = FastAPI()
 
-@app.post("/posts", status_code=status.HTTP_201_CREATED)
-async def create_post(post: Post) -> Post:
-	return post
+# Dummy database
+posts = {
+	1: Post(title="Hello", nb_views=100),
+}
+
+@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_post(id: int) -> None:
+	posts.pop(id, None)
+	return None
