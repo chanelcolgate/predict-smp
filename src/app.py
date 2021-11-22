@@ -1,19 +1,9 @@
-from fastapi import FastAPI, status
-from typing import Dict, Any
-from pydantic import BaseModel
+from fastapi import FastAPI
 
-class Post(BaseModel):
-	title: str
-	nb_views: int
+from src.routers.posts import router as posts_router
+from src.routers.users import router as users_router
 
 app = FastAPI()
 
-# Dummy database
-posts = {
-	1: Post(title="Hello", nb_views=100),
-}
-
-@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_post(id: int) -> None:
-	posts.pop(id, None)
-	return None
+app.include_router(posts_router, prefix='/posts', tags=['posts'])
+app.include_router(users_router, prefix='/users', tags=['users'])
